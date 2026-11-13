@@ -10,6 +10,11 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+    // The Rust-free Prisma client loads its query compiler (.wasm) at runtime with fs, which Next's
+  // file tracing cannot see. Without this, serverless deployments fail with ENOENT on the .wasm.
+  outputFileTracingIncludes: {
+    "/**/*": ["./node_modules/.prisma/client/*.wasm", "./node_modules/.prisma/client/*.js"],
+  },
   experimental: {
     serverActions: { bodySizeLimit: "12mb" },
   },
